@@ -1,0 +1,105 @@
+### with ArchLinux
+
+# 启动向日葵：
+	systemctl start runsunloginclient.service
+# 启动clash：
+	systemctl start clash
+# service 文件位置
+.service文件在/usr/lib/systemd/system目录下
+clash的所有配置文件都在~/.config/clash目录下
+
+# pacman设置软件包数据库
+在/etc/pacman.conf文件中
+
+# 建立软链接
+ln -s 源文件 目标文件地址
+
+
+
+shell没有垃圾箱或者回收站，一旦删除文件，就再也找不回来了
+所以在删除文件时最好加上-i，这样是好习惯。
+	rm -i filename
+
+查看文件类型：
+	file filename
+
+监控瞬时进程：
+	ps
+实时监控进程：
+	top
+结束进程：
+	1. kill PID 相当于 kill -s TERM/15 PID
+	2. kill -s 信号值/信号名 PID
+	3. pkill 进程名		# pkill命令可以使用程序名来代替PID来终止进程
+				# pkill命令允许使用通配符
+
+"""
+监测磁盘空间
+"""
+挂载：
+	mount -t type device directory	# type 指定了磁盘格式化所使用的文件系统类型
+					# device 指定了该存储设备的设备文件位置
+					# directory 指定了挂载点在虚拟目录中的位置
+# 存储设备被挂载到虚拟目录后，root用户就拥有了对该设备的所有访问权限
+# 而其他用户的访问则会被限制。
+卸载：
+# Linux不直接弹出已挂载的CD/DVD，应该先卸载再尝试弹出
+	umount [directory | device]
+查看已挂载的磁盘的使用情况：
+	df
+查看当前目录下所有文件、目录和子目录的磁盘使用情况：
+	du
+
+在文件中查找位于文件中间某处的数据行：
+	grep [options] pattern [file]	# pattern 是正则表达式
+
+查看历史记录中的命令：
+	history
+
+"""
+环境变量
+"""
+# 全局环境变量可以在所有的进程中使用
+# 局部环境变量只能在定义它的进程中使用
+
+查看所有全局环境变量：
+	env
+  等同于printenv
+查看某个环境变量:
+	printenv envname
+	echo $envname
+一并查看全局环境变量、局部环境变量、用户自定义环境变量和局部shell函数：
+	set
+设置局部环境变量：
+	变量名=内容
+eg:	my_variable="Hello Shell"
+设置全局环境变量：
+方式：先创建局部环境变量，再导出变量名
+eg:
+	my_variable="I am Global now"
+	export my_variable
+noting: 子shell无法通过export命令改变父shell中全局环境变量的值
+	也无法删除父shell中的全局环境变量
+	子shell中定义的全局环境变量在父shell中不会生效
+删除环境变量：
+	unset 环境变量名
+
+# 退出shell以后，在shell内定义的全局环境也会消失
+
+# PATH环境变量
+# PATH环境变量定义了用于查找命令和程序的目录，当在shell中输入一个外部命令时，shell必须搜
+# 索系统，从中找到对应的程序。
+PATH环境变量可以通过以下方式修改：
+	PATH=$PATH:想要添加的目标文件所在目录
+
+# 后台运行脚本
+	./你的文件 &
+
+# 在非控制台下运行脚本
+	nohup ./你的文件 &
+	# nohup会解除进程和终端之间的关联，因此为了保存该命令产生的输出，nohup命令会自动将STDOUT和STDERR产生的消息重定向到一个名为nohup的文件中。
+
+# nice命令提高进程的优先级
+	nice -n 优先级值(eg,5) 要启动的命令	# 在命令启动时设置其优先级
+# renice命令修改已运行的进程的优先级
+	renice -n 优先级值 -p PID
